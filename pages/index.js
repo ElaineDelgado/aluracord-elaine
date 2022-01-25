@@ -1,51 +1,19 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config.json'
-
-const GlobalStyle = () => {
-  return (
-    <style global jsx>
-      {`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-          background-color:${ appConfig.theme.colors.neutrals['999']};
-        }
-        /* App fit Height */
-        html,
-        body,
-        #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */
-      `}
-    </style>
-  )
-}
+import {useRouter} from 'next/router'
+import React from 'react'
 
 const Title = (props) => {
   const Tag = props.tag || 'h1'
   return (
-    <>
-      <GlobalStyle />
+    <>      
       <Tag>{props.children}</Tag>
       <style jsx>
         {`
           ${Tag} {
             color: ${appConfig.theme.colors.primary['400']};
             font-size: 2.4rem;
+            line-height:1.3;
           }
         `}
       </style>
@@ -54,11 +22,16 @@ const Title = (props) => {
 }
 
 const HomePage = () => {
-  const username = 'sakura'
+  const [username, setUsername] = React.useState('')
+  const handleInputChange = (event => setUsername(event.target.value))
+  const routing = useRouter()
+  const handleSubmit = (event => {
+    event.preventDefault()
+    routing.push('/chat')
+  })
 
   return (
-    <>
-      <GlobalStyle />
+    <>      
       <Box
         styleSheet={{
           display: 'flex',
@@ -93,6 +66,7 @@ const HomePage = () => {
           {/* Formulário */}
           <Box
             as='form'
+            onSubmit={handleSubmit}
             styleSheet={{
               display: 'flex',
               flexDirection: 'column',
@@ -114,7 +88,11 @@ const HomePage = () => {
               {appConfig.name}
             </Text>
 
-            <TextField
+            <input 
+              type="text" value={username} onChange={handleInputChange}
+            />
+
+            {/* <TextField
               fullWidth
               textFieldColors={{
                 neutral: {
@@ -124,7 +102,7 @@ const HomePage = () => {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-            />
+            /> */}
 
             <Button
               type='submit'
