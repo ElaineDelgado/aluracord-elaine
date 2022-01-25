@@ -31,7 +31,7 @@ const HomePage = () => {
   })
 
   return (
-    <>      
+    <>
       <Box
         styleSheet={{
           display: 'flex',
@@ -88,12 +88,13 @@ const HomePage = () => {
               {appConfig.name}
             </Text>
 
-            <input 
-              type="text" value={username} onChange={handleInputChange}
-            />
+            {/* <input type='text' value={username} onChange={handleInputChange} /> */}
 
-            {/* <TextField
+            <TextField
               fullWidth
+              onChange={handleInputChange}
+              value={username}
+              placeholder='Digite seu usuário Github'
               textFieldColors={{
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
@@ -102,7 +103,7 @@ const HomePage = () => {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-            /> */}
+            />
 
             <Button
               type='submit'
@@ -139,8 +140,13 @@ const HomePage = () => {
                 borderRadius: '50%',
                 marginBottom: '16px',
               }}
-              src={`https://github.com/${username}.png`}
+              src={
+                username.length > 2
+                  ? `https://github.com/${username}.png`
+                  : 'https://www.fiscalti.com.br/wp-content/uploads/2021/02/default-user-image.png'
+              }
             />
+            {username.length > 2 && (
             <Text
               variant='body4'
               styleSheet={{
@@ -152,6 +158,7 @@ const HomePage = () => {
             >
               {username}
             </Text>
+            )}
           </Box>
           {/* Fim Photo Area */}
         </Box>
@@ -162,26 +169,3 @@ const HomePage = () => {
 
 
 export default HomePage
-
-
-
-
-// function HomePage() {
-//   return (
-//     <div>
-//       <Title tag="h1">{'Bem vindo de volta'}</Title>
-//       <h2>Discord - Alura Matrix</h2>
-
-//       <style jsx>
-//         {`
-//           h2 {
-//             color: ${Config.theme.colors.neutrals['300']};
-//             font-family: sans-serif;
-//           }
-//         `}
-//       </style>
-//     </div>
-//   )
-// }
-
-// export default HomePage
