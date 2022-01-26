@@ -25,6 +25,18 @@ const HomePage = () => {
   const [username, setUsername] = React.useState('')
   const handleInputChange = (event => setUsername(event.target.value))
   const routing = useRouter()
+  const [userlocation, setUserlocation] = React.useState('') 
+
+  const loadUserlocation = async () => {
+    const url = `https://api.github.com/users/${username}` 
+    let response = await fetch(url)
+    let json = await response.json()
+    setUserlocation(json.location)
+  }
+  React.useEffect(() => {
+    loadUserlocation()
+  }, [username])
+  
   const handleSubmit = (event => {
     event.preventDefault()
     routing.push('/chat')
@@ -147,17 +159,18 @@ const HomePage = () => {
               }
             />
             {username.length > 2 && (
-            <Text
-              variant='body4'
-              styleSheet={{
-                color: appConfig.theme.colors.neutrals[200],
-                backgroundColor: appConfig.theme.colors.neutrals[900],
-                padding: '3px 10px',
-                borderRadius: '1000px',
-              }}
-            >
-              {username}
-            </Text>
+              <Text
+                variant='body4'
+                styleSheet={{
+                  color: appConfig.theme.colors.neutrals[200],
+                  backgroundColor: appConfig.theme.colors.neutrals[900],
+                  padding: '5px 10px',
+                  borderRadius: '5px',
+                }}
+              >
+                <p>{username} </p>
+                <p>{userlocation}</p>
+              </Text>
             )}
           </Box>
           {/* Fim Photo Area */}
