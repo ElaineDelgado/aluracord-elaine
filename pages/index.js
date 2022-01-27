@@ -100,8 +100,6 @@ const HomePage = () => {
               {appConfig.name}
             </Text>
 
-            {/* <input type='text' value={username} onChange={handleInputChange} /> */}
-
             <TextField
               fullWidth
               onChange={handleInputChange}
