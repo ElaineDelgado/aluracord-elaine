@@ -11,7 +11,7 @@ const Title = (props) => {
       <style jsx>
         {`
           ${Tag} {
-            color: ${appConfig.theme.colors.primary['400']};
+            color: ${appConfig.theme.colors.primary['800']};
             font-size: 2.4rem;
             line-height: 1.3;
           }
@@ -111,7 +111,7 @@ const HomePage = () => {
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
                   mainColor: appConfig.theme.colors.neutrals[900],
-                  mainColorHighLight: appConfig.theme.colors.primary[500],
+                  mainColorHighLight: appConfig.theme.colors.primary[800],
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
@@ -123,9 +123,9 @@ const HomePage = () => {
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals['000'],
-                mainColor: appConfig.theme.colors.primary[500],
+                mainColor: appConfig.theme.colors.primary[800],
                 mainColorLight: appConfig.theme.colors.primary[400],
-                mainColorStrong: appConfig.theme.colors.primary[600],
+                mainColorStrong: appConfig.theme.colors.primary[500],
               }}
             />
           </Box>

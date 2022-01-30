@@ -97,7 +97,7 @@ const MessageList = (props) => {
                     height: '33px',
                     borderRadius: '50%',
                     backgroundColor: appConfig.theme.colors.neutrals[700],
-                    color: appConfig.theme.colors.primary[400],
+                    color: appConfig.theme.colors.primary[600],
                   }}
                   buttonColors={{
                     contrastColor: appConfig.theme.colors.neutrals['000'],

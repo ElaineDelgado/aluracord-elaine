@@ -6,7 +6,7 @@ const GlobalStyle = () => {
       {`
         ::-webkit-scrollbar-track {
           background-color: #010101;
-          border-radius:  10px;
+          border-radius: 10px;
         }
         ::-webkit-scrollbar {
           width: 6px;
@@ -23,9 +23,14 @@ const GlobalStyle = () => {
           box-sizing: border-box;
           list-style: none;
         }
+
         input.sknui-input.jsx-2417824289:hover,
-        input.sknui-input.jsx-2417824289:focus {
+        input.sknui-input.jsx-2417824289:focus,
+        input.sknui-input.jsx-2417824289:active {
           border-color: #ff4dff !important;
+        }
+        button.sknui-button.jsx-1768955938:focus {
+          background-color: #ff4dff !important;
         }
         body {
           font-family: 'Open Sans', sans-serif;

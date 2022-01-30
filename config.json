@@ -40,17 +40,16 @@
   "theme": {
     "colors": {
       "primary": {
-        "50": "#ffe6ff",
-        "100": "#ffccff",
-        "250": "#ffb3ff",
-        "300": "#ff99ff",
-        "400": "#ff80ff",
-        "500": "#ff66ff",
-        "600": "#ff4dff",
-        "700": "#ff33ff",
-        "800": "#ffccff",
-        "900": "#ffe6ff"
-        
+        "50": "#fff7ff",
+        "100": "#ffe8ff",
+        "200": "#ffd9ff",
+        "300": "#ffc9ff",
+        "400": "#ffb2ff",
+        "500": "#ff9cff",
+        "600": "#ff8cff",
+        "700": "#ff7dff",
+        "800": "#ff6eff",
+        "900": "#ff66ff"
       },
       "neutrals": {
         "000": "#FFFFFF",

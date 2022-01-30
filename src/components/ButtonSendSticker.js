@@ -23,11 +23,17 @@ const ButtonSendSticker = (props) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.neutrals[300],
+          backgroundColor: appConfig.theme.colors.neutrals[700],
           backgroundColor: isOpen
-            ? appConfig.theme.colors.primary[700]
-            : appConfig.theme.colors.primary[400],
+            ? appConfig.theme.colors.primary[900]
+            : appConfig.theme.colors.primary[900],
           hover: {
+            backgroundColor: appConfig.theme.colors.primary[700],
+          },
+          active: {
+            backgroundColor: appConfig.theme.colors.primary[700],
+          },
+          focus: {
             backgroundColor: appConfig.theme.colors.primary[700],
           },
         }}
