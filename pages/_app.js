@@ -4,20 +4,34 @@ const GlobalStyle = () => {
   return (
     <style global jsx>
       {`
+        ::-webkit-scrollbar-track {
+          background-color: #010101;
+          border-radius:  10px;
+        }
+        ::-webkit-scrollbar {
+          width: 6px;
+          background: #010101;
+          border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #dad7d7;
+          border-radius: 10px;
+        }
         * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
           list-style: none;
         }
-        input.sknui-input.jsx-2417824289:hover {
+        input.sknui-input.jsx-2417824289:hover,
+        input.sknui-input.jsx-2417824289:focus {
           border-color: #ff4dff !important;
         }
         body {
           font-family: 'Open Sans', sans-serif;
           background-color: ${appConfig.theme.colors.neutrals['999']};
         }
-        p{
+        p {
           color: ${appConfig.theme.colors.neutrals['400']};
           line-height: 1.5;
         }

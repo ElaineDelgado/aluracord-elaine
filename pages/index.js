@@ -1,19 +1,19 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config.json'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 const Title = (props) => {
   const Tag = props.tag || 'h1'
   return (
-    <>      
+    <>
       <Tag>{props.children}</Tag>
       <style jsx>
         {`
           ${Tag} {
             color: ${appConfig.theme.colors.primary['400']};
             font-size: 2.4rem;
-            line-height:1.3;
+            line-height: 1.3;
           }
         `}
       </style>
@@ -23,12 +23,12 @@ const Title = (props) => {
 
 const HomePage = () => {
   const [username, setUsername] = React.useState('')
-  const handleInputChange = (event => setUsername(event.target.value))
+  const handleInputChange = (event) => setUsername(event.target.value)
   const routing = useRouter()
-  const [userlocation, setUserlocation] = React.useState('') 
+  const [userlocation, setUserlocation] = React.useState('')
 
   const loadUserlocation = async () => {
-    const url = `https://api.github.com/users/${username}` 
+    const url = `https://api.github.com/users/${username}`
     let response = await fetch(url)
     let json = await response.json()
     setUserlocation(json.location)
@@ -36,11 +36,13 @@ const HomePage = () => {
   React.useEffect(() => {
     loadUserlocation()
   }, [username])
-  
-  const handleSubmit = (event => {
+
+  const handleSubmit = (event) => {
     event.preventDefault()
-    routing.push('/chat')
-  })
+    {
+      username && routing.push(`/chat?username=${username}`)
+    }
+  }
 
   return (
     <>
@@ -177,6 +179,5 @@ const HomePage = () => {
     </>
   )
 }
-
 
 export default HomePage

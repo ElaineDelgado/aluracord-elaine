@@ -1,8 +1,11 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components'
 import React from 'react'
 import appConfig from '../config.json'
+import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/router'
+import ButtonSendSticker from '../src/components/ButtonSendSticker'
 
-const Header = () =>{
+const Header = () => {
   return (
     <>
       <Box
@@ -31,33 +34,37 @@ const MessageList = (props) => {
     <Box
       tag='ul'
       styleSheet={{
+        overflowY: 'auto',
         display: 'flex',
-        flexDirection: 'column-reverse',
+        flexDirection: 'column',
         flex: 1,
         color: appConfig.theme.colors.neutrals['000'],
         marginBottom: '16px',
       }}
     >
-      {
-        props.allmessages.map((message) => {
-          return (
-            <Text
-              tag='li'
-              key={message.id}
+      {props.allmessages.map((message) => {
+        return (
+          <Text
+            tag='li'
+            key={message.id}
+            styleSheet={{
+              borderRadius: '5px',
+              padding: '6px',
+              marginBottom: '12px',
+              hover: {
+                backgroundColor: appConfig.theme.colors.neutrals[700],
+              },
+            }}
+          >
+            <Box
               styleSheet={{
-                borderRadius: '5px',
-                padding: '6px',
-                marginBottom: '12px',
-                hover: {
-                  backgroundColor: appConfig.theme.colors.neutrals[700],
-                },
+                marginBottom: '8px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
               }}
             >
-              <Box
-                styleSheet={{
-                  marginBottom: '8px',
-                }}
-              >
+              <Box>
                 <Image
                   styleSheet={{
                     width: '20px',
@@ -66,7 +73,7 @@ const MessageList = (props) => {
                     display: 'inline-block',
                     marginRight: '8px',
                   }}
-                  src={`https://github.com/vanessametonini.png`}
+                  src={`https://github.com/${message.from}.png`}
                 />
                 <Text tag='strong'>{message.from}</Text>
                 <Text
@@ -80,39 +87,131 @@ const MessageList = (props) => {
                   {new Date().toLocaleDateString()}
                 </Text>
               </Box>
-              {message.text}
-            </Text>
-          )
-        })
-      }
+              <Box>
+                <Button
+                  type='button'
+                  label='X'
+                  styleSheet={{
+                    width: '30px',
+                    height: '33px',
+                    borderRadius: '50%',
+                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                    color: appConfig.theme.colors.primary[400],
+                  }}
+                  buttonColors={{
+                    contrastColor: appConfig.theme.colors.neutrals['000'],
+                    mainColor: appConfig.theme.colors.primary[500],
+                    mainColorLight: appConfig.theme.colors.primary[400],
+                    mainColorStrong: appConfig.theme.colors.primary[600],
+                  }}
+                  onClick={() => {
+                    props.onDelete(message.id)
+                  }}
+                >
+                  X
+                </Button>
+              </Box>
+            </Box>
+            {message.text.startsWith(':sticker:') ? (
+              <Image src={message.text.replace(':sticker:', '')} />
+            ) : (
+              message.text
+            )}
+          </Text>
+        )
+      })}
     </Box>
   )
 }
 
+const SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMwMTc4NCwiZXhwIjoxOTU4ODc3Nzg0fQ.LBcZyPDE9mHowRIAiVC0FU2dmupCFkmn70m3g6uerxU'
 
-export default function ChatPage() {
+const SUPABASE_URL = 'https://ilnaglrbjntysewiqytb.supabase.co'
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// const realTimeMessageListener = (addNewMessage) => {
+//   return supabaseClient
+//     .from('mensagens')
+//     .on('INSERT', (responseLive) => addNewMessage(responseLive.new))
+//     .subscribe()
+// }
+
+export default function ChatPage({ user, SUPABASE_URL, SUPABASE_ANON_KEY }) {
+  const routing = useRouter()
+  const loggedUser = routing.query.username
+  /**query=chave e username=valor do path /chat?username=ElaineDelgado*/
+  /*console.log(routing.query) {username: 'ElaineDelgado'}*/
   const [message, setMessage] = React.useState('')
+  const [chat, setChat] = React.useState([])
   const handleMessage = (event) => {
     setMessage(event.target.value)
   }
 
+  const listeningChanges = (response) => {
+    return supabaseClient
+    .from('mensagens') 
+    .on('INSERT', (responseLive) => {
+      response(responseLive)
+    })
+    .on('DELETE', (responseLive) => {
+      response(responseLive.old.id)
+    })
+    .subscribe()
+  }
+
+  React.useEffect(() => {
+    supabaseClient
+      .from('mensagens')
+      .select('*')
+      .order('id', { ascending: false })
+      .then(({ data }) => setChat(data))
+      const subscribe = listeningChanges((response) => {
+        console.log(response.eventType)
+        if (response.eventType === 'INSERT') {
+          setChat((currentValue) => {
+            return [...currentValue, response.new]
+          })
+        } else {
+          setChat((currentValue) =>
+            currentValue.filter((value) => value.id !== response),
+          )
+        }
+      })
+      return () => subscribe.unsubscribe()
+  }, [])
+
   const handleNewMessages = (novaMensagem) => {
     const message = {
-      id: chat.length + 1,
-      from: 'ElaineDelgado',
+      from: loggedUser,
       text: novaMensagem,
     }
-    setChat([...chat, message])
+
+    supabaseClient
+      .from('mensagens')
+      .insert([message])
+      .then(({ data }) =>{})
+
     setMessage('')
+    console.log(novaMensagem);
   }
+
+  const handleDeleteMessage =  (messageId) => {
+    supabaseClient
+      .from('mensagens')
+      .delete()
+      .match({ id: messageId })
+      .then(({ data }) => {
+        console.log(data)
+      })
+  }
+
   const handleSubmit = (event) => {
-    if(event.key === 'Enter') {
+    if (event.key === 'Enter') {
       event.preventDefault()
       handleNewMessages(message)
     }
   }
-
-  const [chat, setChat] = React.useState([])
 
   return (
     <Box
@@ -155,7 +254,7 @@ export default function ChatPage() {
             padding: '16px',
           }}
         >
-          <MessageList allmessages={chat}/>
+          <MessageList allmessages={chat} onDelete={handleDeleteMessage} />
 
           <Box
             as='form'
@@ -181,10 +280,14 @@ export default function ChatPage() {
                 color: appConfig.theme.colors.neutrals[200],
               }}
             />
+            <ButtonSendSticker
+              onStickerClick={(sticker) =>
+                handleNewMessages(`:sticker:${sticker}`)
+              }
+            />
           </Box>
         </Box>
       </Box>
     </Box>
   )
 }
-
