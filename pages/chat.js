@@ -29,6 +29,7 @@ const Header = () => {
   )
 }
 
+
 const MessageList = (props) => {
   return (
     <Box
@@ -102,7 +103,7 @@ const MessageList = (props) => {
                     contrastColor: appConfig.theme.colors.neutrals['000'],
                     mainColor: appConfig.theme.colors.primary[500],
                     mainColorLight: appConfig.theme.colors.primary[400],
-                    mainColorStrong: appConfig.theme.colors.primary[600],
+                    mainColorStrong: appConfig.theme.colors.neutrals[400],
                   }}
                   onClick={() => {
                     props.onDelete(message.id)
@@ -113,7 +114,13 @@ const MessageList = (props) => {
               </Box>
             </Box>
             {message.text.startsWith(':sticker:') ? (
-              <Image src={message.text.replace(':sticker:', '')} />
+              <Image
+                styleSheet={{
+                  maxWidth: '150px',
+                  height: 'auto',
+                }}
+                src={message.text.replace(':sticker:', '')}
+              />
             ) : (
               message.text
             )}
