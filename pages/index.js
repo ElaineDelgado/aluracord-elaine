@@ -33,6 +33,7 @@ const HomePage = () => {
     let json = await response.json()
     setUserlocation(json.location)
   }
+  
   React.useEffect(() => {
     loadUserlocation()
   }, [username])

@@ -31,6 +31,15 @@ const Header = () => {
 
 
 const MessageList = (props) => {
+  const routing = useRouter()
+  const userAtentication = routing.query.username
+  //modal  
+  const [modal, setModal] = React.useState(false)
+  const handleMouseOver = () => {
+    setModal(true)
+  }
+  const handleMouseOut = () => setModal(false)
+
   return (
     <Box
       tag='ul'
@@ -65,8 +74,10 @@ const MessageList = (props) => {
                 justifyContent: 'space-between',
               }}
             >
-              <Box>
+              <Box styleSheet={{ position: 'relative' }}>
                 <Image
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={handleMouseOut}
                   styleSheet={{
                     width: '20px',
                     height: '20px',
@@ -87,9 +98,21 @@ const MessageList = (props) => {
                 >
                   {new Date().toLocaleDateString()}
                 </Text>
+                {modal && (
+                  <Text
+                    styleSheet={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-30px',
+                    }}
+                  >
+                    olá
+                  </Text>
+                )}
               </Box>
               <Box>
-                <Button
+                {message.from === userAtentication 
+                ?<Button
                   type='button'
                   label='X'
                   styleSheet={{
@@ -111,6 +134,8 @@ const MessageList = (props) => {
                 >
                   X
                 </Button>
+                : null }
+                
               </Box>
             </Box>
             {message.text.startsWith(':sticker:') ? (
@@ -174,7 +199,6 @@ export default function ChatPage({ user, SUPABASE_URL, SUPABASE_ANON_KEY }) {
       .order('id', { ascending: false })
       .then(({ data }) => setChat(data))
       const subscribe = listeningChanges((response) => {
-        console.log(response.eventType)
         if (response.eventType === 'INSERT') {
           setChat((currentValue) => {
             return [...currentValue, response.new]
@@ -200,7 +224,6 @@ export default function ChatPage({ user, SUPABASE_URL, SUPABASE_ANON_KEY }) {
       .then(({ data }) =>{})
 
     setMessage('')
-    console.log(novaMensagem);
   }
 
   const handleDeleteMessage =  (messageId) => {
@@ -209,7 +232,6 @@ export default function ChatPage({ user, SUPABASE_URL, SUPABASE_ANON_KEY }) {
       .delete()
       .match({ id: messageId })
       .then(({ data }) => {
-        console.log(data)
       })
   }
 
